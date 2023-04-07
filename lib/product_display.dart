@@ -46,19 +46,56 @@ class ProductDisplay extends ConsumerWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       ElevatedButton(
-                          onPressed: () {
+                        onPressed: () {
+                          if (cart.contains(data[index])) {
+                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                              content: const Text('ALREADY ADDED'),
+                              action: SnackBarAction(
+                                onPressed: () {},
+                                label: '',
+                              ),
+                            ));
+                          } else {
                             cart.add(data[index]);
-                          },
-                          child: const Icon(Icons.add),),
-                      const SizedBox(width: 10),
-
-                      ElevatedButton(
-
-             onPressed: () {
-
-                          cart.remove(data[index]);
+                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                              content: const Text('ADDED'),
+                              action: SnackBarAction(
+                                onPressed: () {},
+                                label: '',
+                              ),
+                            ));
+                          }
                         },
-                        child: const Icon(Icons.remove),),
+                        child: const Icon(Icons.add),
+                      ),
+                      const SizedBox(width: 10),
+                      ElevatedButton(
+                        onPressed: () {
+                          if (cart.contains(data[index])) {
+                            cart.remove(data[index]);
+                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                              content: const Text('REMOVED'),
+                              action: SnackBarAction(
+                                onPressed: () {
+                                  cart.add(data[index]);
+                                },
+                                label: 'UNDO',
+                              ),
+                            ));
+                          } else {
+                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                              content: const Text('NOT PRESENT IN CART'),
+                              action: SnackBarAction(
+                                onPressed: () {
+                                  cart.add(data[index]);
+                                },
+                                label: 'ADD?',
+                              ),
+                            ));
+                          }
+                        },
+                        child: const Icon(Icons.remove),
+                      ),
                     ],
                   )
                 ],
