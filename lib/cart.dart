@@ -29,6 +29,8 @@ class Cart extends ConsumerWidget {
                       width: 70,
                       child: Image.network(cart[index].image)),
                 ),
+                Text("Quantity: ${cart[index].qty}"),
+
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -37,7 +39,9 @@ class Cart extends ConsumerWidget {
                     ElevatedButton(
                       onPressed: () {
                         if (cart.contains(cart[index])) {
+                          cart[index].qty=1;
                           cart.remove(cart[index]);
+
                           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                             content: const Text('REMOVED'),
                             action: SnackBarAction(

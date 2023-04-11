@@ -1,4 +1,7 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
 import '/product_display.dart';
@@ -77,7 +80,8 @@ class _MyLoginState extends State<MyLogin> {
                 ),
                 ElevatedButton(
                   onPressed: () {
-                    Get.to(() => const ProductDisplay());
+                    readJson(uName.text, password.text);
+                    //Get.to(() => const ProductDisplay());
                   },
                   style: ButtonStyle(
                       backgroundColor:
@@ -96,5 +100,20 @@ class _MyLoginState extends State<MyLogin> {
         ],
       ),
     );
+  }
+}
+
+
+
+
+Future<dynamic> readJson(uName, password) async {
+  List users = [];
+  final String response = await rootBundle.loadString('assets/cred.json');
+  final data = await json.decode(response);
+  users = data["users"];
+  if (uName == users[0]["uname"] && password == users[0]["pass"]) {
+   Get.to(const ProductDisplay());
+  } else {
+   print("Wrong pass");
   }
 }
