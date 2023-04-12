@@ -11,6 +11,8 @@ class ProductDisplay extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final prodData = ref.watch(prodcutDataProvider);
+    final loginStatusWatch = ref.watch(loginStatus);
+    print("Prod Page "+loginStatusWatch.toString());
     //check
     final cart = ref.watch(cartProvider);
     return Scaffold(

@@ -2,23 +2,22 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
+import 'package:riverpod_one/main.dart';
+
 
 import '/product_display.dart';
 
-class MyLogin extends StatefulWidget {
-  const MyLogin({Key? key}) : super(key: key);
-
-  @override
-  State<MyLogin> createState() => _MyLoginState();
-}
-
-class _MyLoginState extends State<MyLogin> {
+class MyLogin extends ConsumerWidget {
+   MyLogin({Key? key}) : super(key: key);
   final uName = TextEditingController();
   final password = TextEditingController();
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    var loginStatusWatch = ref.watch(loginStatus);
+    print("Login Page "+loginStatusWatch.toString());
     return Scaffold(
       resizeToAvoidBottomInset: true,
       body: Stack(
@@ -79,9 +78,18 @@ class _MyLoginState extends State<MyLogin> {
                   height: 20,
                 ),
                 ElevatedButton(
-                  onPressed: () {
-                    readJson(uName.text, password.text);
-                    //Get.to(() => const ProductDisplay());
+                  onPressed: () async {
+                   // readJson(uName.text, password.text,loginStatusWatch);
+                    List users = [];
+                    final String response = await rootBundle.loadString('assets/cred.json');
+                    final data = await json.decode(response);
+                    users = data["users"];
+                    if (uName.text == users[0]["uname"] && password.text == users[0]["pass"]) {
+                      loginStatusWatch = true;
+                      Get.to(const ProductDisplay());
+                    } else {
+                      print("Wrong pass");
+                    }
                   },
                   style: ButtonStyle(
                       backgroundColor:
@@ -103,17 +111,16 @@ class _MyLoginState extends State<MyLogin> {
   }
 }
 
-
-
-
-Future<dynamic> readJson(uName, password) async {
+Future<dynamic> readJson(uName, password,loginStatusWatch) async {
   List users = [];
   final String response = await rootBundle.loadString('assets/cred.json');
   final data = await json.decode(response);
+
   users = data["users"];
   if (uName == users[0]["uname"] && password == users[0]["pass"]) {
-   Get.to(const ProductDisplay());
+    loginStatusWatch = true;
+    Get.to(const ProductDisplay());
   } else {
-   print("Wrong pass");
+    print("Wrong pass");
   }
 }

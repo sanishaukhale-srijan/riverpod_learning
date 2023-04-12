@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
+import 'package:riverpod_one/model/user_model.dart';
 
 import '/api_services.dart';
 import '/login.dart';
@@ -12,6 +13,7 @@ final prodcutDataProvider = FutureProvider<List<ProductModel>>((ref) {
   return ref.read(apiProvider).getProducts();
 });
 final cartProvider = StateProvider<List<ProductModel>>((ref) => []);
+final loginStatus = StateProvider((ref) =>false);
 void main() {
   runApp(const ProviderScope(child: MyApp()));
 }
@@ -28,7 +30,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const MyLogin(),
+      home:  MyLogin(),
     );
   }
 }
