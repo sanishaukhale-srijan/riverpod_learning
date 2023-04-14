@@ -12,7 +12,7 @@ class ProductDisplay extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final prodData = ref.watch(productDataProvider);
     final cart = ref.watch(cartProvider);
-    final quantity = ref.watch(quantityProvider);
+
     return Scaffold(
       appBar: AppBar(
         title: const Text("PRODUCTS"),

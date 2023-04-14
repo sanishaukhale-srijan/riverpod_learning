@@ -85,7 +85,7 @@ class MyLogin extends ConsumerWidget {
                             ref.read(loginStatus.notifier).state =
                                 await readJson(uName.text, password.text);
                             ref.watch(loginStatus) == LoginState.loginSuccessful
-                                ? Get.to(const ProductDisplay())
+                                ? Get.to(() => const ProductDisplay())
                                 : null;
                           });
                         },
