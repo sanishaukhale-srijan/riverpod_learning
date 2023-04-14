@@ -81,7 +81,7 @@ class MyLogin extends ConsumerWidget {
                         onPressed: () {
                           ref.read(loginStatus.notifier).state =
                               LoginState.loading;
-                          Future.delayed(const Duration(seconds: 2), () async {
+                          Future.delayed(const Duration(seconds: 1), () async {
                             ref.read(loginStatus.notifier).state =
                                 await readJson(uName.text, password.text);
                             ref.watch(loginStatus) == LoginState.loginSuccessful

@@ -18,7 +18,9 @@ class ProductDisplay extends ConsumerWidget {
         title: const Text("PRODUCTS"),
         actions: <Widget>[
           IconButton(
-            icon: const Icon(Icons.shopping_cart),
+            icon:  CircleAvatar(
+                backgroundColor: Colors.red,
+                child: Text(cart.length.toString())),
             onPressed: () {
               Get.to(() => const Cart());
             },
@@ -59,7 +61,7 @@ class ProductDisplay extends ConsumerWidget {
                             ));
                           } else {
                             cart.add(data[index]);
-
+                            ref.watch(cartProvider.notifier).state = [...cart];
                             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                               content: const Text('ADDED'),
                               action: SnackBarAction(

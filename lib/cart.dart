@@ -40,6 +40,7 @@ class Cart extends ConsumerWidget {
                         } else {
                           cart[index].qty--;
                         }
+                        ref.watch(cartProvider.notifier).state = [...cart];
                       },
                       child: const Icon(Icons.remove),
                     ),
