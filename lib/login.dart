@@ -84,8 +84,7 @@ class MyLogin extends ConsumerWidget {
                           Future.delayed(const Duration(seconds: 2), () async {
                             ref.read(loginStatus.notifier).state =
                                 await readJson(uName.text, password.text);
-                            ref.watch(loginStatus) ==
-                                    LoginState.loginSuccessful
+                            ref.watch(loginStatus) == LoginState.loginSuccessful
                                 ? Get.to(const ProductDisplay())
                                 : null;
                           });
@@ -107,22 +106,11 @@ Future<LoginState> readJson(uName, password) async {
   final String response = await rootBundle.loadString('assets/cred.json');
   final data = jsonDecode(response);
   user = data['users'];
-  //If user does not exist!
-  if (user[0]['uname'] != uName && user[0]['pass'] != password) {
+  if (user[0]['uname'] == uName && user[0]['pass'] == password) {
+    return LoginState.loginSuccessful;
+  } else if (user[0]['uname'] != uName || user[0]['pass'] != password) {
     return LoginState.loginFailed;
-  }
-  //user exists
-  else {
-    if (user[0]['uname'] == uName && user[0]['pass'] == password) {
-      return LoginState.loginSuccessful;
-    }
-    // incorrect credentials
-    else {
-      if (user[0]['uname'] != uName) {
-        return LoginState.loginFailed;
-      } else {
-        return LoginState.loginFailed;
-      }
-    }
+  } else {
+    return LoginState.loginFailed;
   }
 }

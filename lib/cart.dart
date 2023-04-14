@@ -35,29 +35,10 @@ class Cart extends ConsumerWidget {
                   children: [
                     ElevatedButton(
                       onPressed: () {
-                        if (cart.contains(cart[index])) {
-                          cart[index].qty = 1;
+                        if (cart[index].qty == 1) {
                           cart.remove(cart[index]);
-
-                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                            content: const Text('REMOVED'),
-                            action: SnackBarAction(
-                              onPressed: () {
-                                cart.add(cart[index]);
-                              },
-                              label: 'UNDO',
-                            ),
-                          ));
                         } else {
-                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                            content: const Text('NOT PRESENT IN CART'),
-                            action: SnackBarAction(
-                              onPressed: () {
-                                cart.add(cart[index]);
-                              },
-                              label: 'ADD?',
-                            ),
-                          ));
+                          cart[index].qty--;
                         }
                       },
                       child: const Icon(Icons.remove),

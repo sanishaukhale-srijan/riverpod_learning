@@ -12,6 +12,7 @@ class ProductDisplay extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final prodData = ref.watch(productDataProvider);
     final cart = ref.watch(cartProvider);
+    final quantity = ref.watch(quantityProvider);
     return Scaffold(
       appBar: AppBar(
         title: const Text("PRODUCTS"),
@@ -41,76 +42,37 @@ class ProductDisplay extends ConsumerWidget {
                         width: 70,
                         child: Image.network(data[index].image)),
                   ),
-                  Text("Quantity: ${data[index].qty}"),
-                  cart.contains(data[index])
-                      ? const Text("GO TO CART")
-                      : Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            ElevatedButton(
-                              onPressed: () {
-                                if (cart.contains(data[index])) {
-                                  data[index].qty = data[index].qty + 1;
-                                  ScaffoldMessenger.of(context)
-                                      .showSnackBar(SnackBar(
-                                    content: const Text('ALREADY ADDED'),
-                                    action: SnackBarAction(
-                                      onPressed: () {},
-                                      label: '',
-                                    ),
-                                  ));
-                                } else {
-                                  cart.add(data[index]);
-                                  ScaffoldMessenger.of(context)
-                                      .showSnackBar(SnackBar(
-                                    content: const Text('ADDED'),
-                                    action: SnackBarAction(
-                                      onPressed: () {},
-                                      label: '',
-                                    ),
-                                  ));
-                                }
-                              },
-                              child: const Icon(Icons.add),
-                            ),
-                            const SizedBox(width: 10),
-                            ElevatedButton(
-                              onPressed: () {
-                                if (cart.contains(data[index])) {
-                                  cart.remove(data[index]);
-                                  data[index].qty = 1;
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(
-                                      content: const Text('REMOVED'),
-                                      action: SnackBarAction(
-                                        onPressed: () {
-                                          cart.add(data[index]);
-                                        },
-                                        label: 'UNDO',
-                                      ),
-                                    ),
-                                  );
-                                } else {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(
-                                      content:
-                                          const Text('NOT PRESENT IN CART'),
-                                      action: SnackBarAction(
-                                        onPressed: () {
-                                          cart.add(
-                                            data[index],
-                                          );
-                                        },
-                                        label: 'ADD?',
-                                      ),
-                                    ),
-                                  );
-                                }
-                              },
-                              child: const Icon(Icons.remove),
-                            ),
-                          ],
-                        )
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      ElevatedButton(
+                        onPressed: () {
+                          if (cart.contains(data[index])) {
+                            cart[cart.indexOf(data[index])].qty++;
+
+                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                              content: const Text('ALREADY ADDED'),
+                              action: SnackBarAction(
+                                onPressed: () {},
+                                label: '',
+                              ),
+                            ));
+                          } else {
+                            cart.add(data[index]);
+
+                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                              content: const Text('ADDED'),
+                              action: SnackBarAction(
+                                onPressed: () {},
+                                label: '',
+                              ),
+                            ));
+                          }
+                        },
+                        child: const Text("ADD TO CART"),
+                      ),
+                    ],
+                  )
                 ],
               );
             }),

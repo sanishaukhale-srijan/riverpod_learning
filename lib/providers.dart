@@ -10,4 +10,4 @@ final productDataProvider = FutureProvider<List<ProductModel>>((ref) {
 });
 final cartProvider = StateProvider<List<ProductModel>>((ref) => []);
 final loginStatus = StateProvider<LoginState>((ref) => LoginState.loginInit);
-final quantity = StateProvider((ref) => []);
+final quantityProvider = StateProvider((ref) => []);
