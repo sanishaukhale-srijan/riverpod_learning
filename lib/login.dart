@@ -4,20 +4,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
-import 'package:riverpod_one/main.dart';
-
 
 import '/product_display.dart';
+import '/providers.dart';
 
 class MyLogin extends ConsumerWidget {
-   MyLogin({Key? key}) : super(key: key);
+  MyLogin({Key? key}) : super(key: key);
   final uName = TextEditingController();
   final password = TextEditingController();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     var loginStatusWatch = ref.watch(loginStatus);
-    print("Login Page "+loginStatusWatch.toString());
     return Scaffold(
       resizeToAvoidBottomInset: true,
       body: Stack(
@@ -77,31 +75,22 @@ class MyLogin extends ConsumerWidget {
                 const SizedBox(
                   height: 20,
                 ),
-                ElevatedButton(
-                  onPressed: () async {
-                   // readJson(uName.text, password.text,loginStatusWatch);
-                    List users = [];
-                    final String response = await rootBundle.loadString('assets/cred.json');
-                    final data = await json.decode(response);
-                    users = data["users"];
-                    if (uName.text == users[0]["uname"] && password.text == users[0]["pass"]) {
-                      loginStatusWatch = true;
-                      Get.to(const ProductDisplay());
-                    } else {
-                      print("Wrong pass");
-                    }
-                  },
-                  style: ButtonStyle(
-                      backgroundColor:
-                          MaterialStateProperty.all(Colors.red.shade50)),
-                  child: const Text(
-                    'SIGN IN',
-                    style: TextStyle(
-                      fontSize: 18,
-                      color: Colors.black,
-                    ),
-                  ),
-                ),
+                loginStatusWatch == LoginState.loading
+                    ? const CircularProgressIndicator()
+                    : ElevatedButton(
+                        onPressed: () {
+                          ref.read(loginStatus.notifier).state =
+                              LoginState.loading;
+                          Future.delayed(const Duration(seconds: 2), () async {
+                            ref.read(loginStatus.notifier).state =
+                                await readJson(uName.text, password.text);
+                            ref.watch(loginStatus) ==
+                                    LoginState.loginSuccessful
+                                ? Get.to(const ProductDisplay())
+                                : null;
+                          });
+                        },
+                        child: const Text("LOGIN")),
               ],
             ),
           ),
@@ -111,16 +100,29 @@ class MyLogin extends ConsumerWidget {
   }
 }
 
-Future<dynamic> readJson(uName, password,loginStatusWatch) async {
-  List users = [];
-  final String response = await rootBundle.loadString('assets/cred.json');
-  final data = await json.decode(response);
+enum LoginState { loginInit, loginSuccessful, loginFailed, loading }
 
-  users = data["users"];
-  if (uName == users[0]["uname"] && password == users[0]["pass"]) {
-    loginStatusWatch = true;
-    Get.to(const ProductDisplay());
-  } else {
-    print("Wrong pass");
+Future<LoginState> readJson(uName, password) async {
+  List user = [];
+  final String response = await rootBundle.loadString('assets/cred.json');
+  final data = jsonDecode(response);
+  user = data['users'];
+  //If user does not exist!
+  if (user[0]['uname'] != uName && user[0]['pass'] != password) {
+    return LoginState.loginFailed;
+  }
+  //user exists
+  else {
+    if (user[0]['uname'] == uName && user[0]['pass'] == password) {
+      return LoginState.loginSuccessful;
+    }
+    // incorrect credentials
+    else {
+      if (user[0]['uname'] != uName) {
+        return LoginState.loginFailed;
+      } else {
+        return LoginState.loginFailed;
+      }
+    }
   }
 }

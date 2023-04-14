@@ -1,10 +1,12 @@
 import 'dart:convert';
 
 import 'package:http/http.dart';
-import 'package:riverpod_one/model/product_model.dart';
+
+import '/model/product_model.dart';
 
 class ApiService {
   String url = "https://fakestoreapi.com/products";
+
   Future<List<ProductModel>> getProducts() async {
     Response response = await get(Uri.parse(url));
     if (response.statusCode == 200) {

@@ -10,6 +10,7 @@ class UserModel {
         "uname": uname,
         "pass": pass,
       };
+
   factory UserModel.fromJson(Map<String, dynamic> json) {
     return UserModel(name: 'name', uname: 'uname', pass: 'pass');
   }

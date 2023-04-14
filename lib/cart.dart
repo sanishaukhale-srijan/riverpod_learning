@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'main.dart';
+import '/providers.dart';
 
 class Cart extends ConsumerWidget {
   const Cart({Key? key}) : super(key: key);
@@ -30,16 +30,13 @@ class Cart extends ConsumerWidget {
                       child: Image.network(cart[index].image)),
                 ),
                 Text("Quantity: ${cart[index].qty}"),
-
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-
-
                     ElevatedButton(
                       onPressed: () {
                         if (cart.contains(cart[index])) {
-                          cart[index].qty=1;
+                          cart[index].qty = 1;
                           cart.remove(cart[index]);
 
                           ScaffoldMessenger.of(context).showSnackBar(SnackBar(

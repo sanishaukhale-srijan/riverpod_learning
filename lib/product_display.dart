@@ -3,17 +3,14 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
 
 import '/cart.dart';
-import '/main.dart';
+import '/providers.dart';
 
 class ProductDisplay extends ConsumerWidget {
   const ProductDisplay({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final prodData = ref.watch(prodcutDataProvider);
-    final loginStatusWatch = ref.watch(loginStatus);
-    print("Prod Page "+loginStatusWatch.toString());
-    //check
+    final prodData = ref.watch(productDataProvider);
     final cart = ref.watch(cartProvider);
     return Scaffold(
       appBar: AppBar(
@@ -82,27 +79,32 @@ class ProductDisplay extends ConsumerWidget {
                                 if (cart.contains(data[index])) {
                                   cart.remove(data[index]);
                                   data[index].qty = 1;
-                                  ScaffoldMessenger.of(context)
-                                      .showSnackBar(SnackBar(
-                                    content: const Text('REMOVED'),
-                                    action: SnackBarAction(
-                                      onPressed: () {
-                                        cart.add(data[index]);
-                                      },
-                                      label: 'UNDO',
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: const Text('REMOVED'),
+                                      action: SnackBarAction(
+                                        onPressed: () {
+                                          cart.add(data[index]);
+                                        },
+                                        label: 'UNDO',
+                                      ),
                                     ),
-                                  ));
+                                  );
                                 } else {
-                                  ScaffoldMessenger.of(context)
-                                      .showSnackBar(SnackBar(
-                                    content: const Text('NOT PRESENT IN CART'),
-                                    action: SnackBarAction(
-                                      onPressed: () {
-                                        cart.add(data[index]);
-                                      },
-                                      label: 'ADD?',
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content:
+                                          const Text('NOT PRESENT IN CART'),
+                                      action: SnackBarAction(
+                                        onPressed: () {
+                                          cart.add(
+                                            data[index],
+                                          );
+                                        },
+                                        label: 'ADD?',
+                                      ),
                                     ),
-                                  ));
+                                  );
                                 }
                               },
                               child: const Icon(Icons.remove),
